@@ -66,7 +66,7 @@ namespace Hiq_test
                         var carHeading = splittedCarPosition[2];
                         var headingRegex = new Regex("[NSWE]");
                         
-                        if(carXIsInt && carYIsInt && headingRegex.IsMatch(carHeading) && carHeading.Length == 1)
+                        if (carXIsInt && carYIsInt && headingRegex.IsMatch(carHeading) && carHeading.Length == 1)
                         {
                             car = new Car(carHeading);
                             room.SetCarPosition(parsedCarX, parsedCarY);
@@ -83,7 +83,6 @@ namespace Hiq_test
                     }
                 }
 
-
                 Console.WriteLine("\n");
                 Console.WriteLine("Available commands are F, B, L or R. ");
                 Console.WriteLine("Enter command: ");
@@ -99,15 +98,16 @@ namespace Hiq_test
                         try
                         {
                             car.Move(carCommand, room);
-                            Console.WriteLine("Success!!");
-                            Console.WriteLine(room.GetCarPosition().x + " " + room.GetCarPosition().y + " " + car.Heading);
-                            Console.ReadKey();
+                            Console.WriteLine("Success! \n");
+                            Console.WriteLine($"Current car position: {room.GetCarPosition().x} {room.GetCarPosition().y} {car.Heading}");
+                            RestartProgramPrompt();
                         }
                         catch (Exception e)
                         {
+                            Console.WriteLine();
                             Console.WriteLine("Oh no the car drove into the wall");
                             Console.WriteLine(e.Message);
-                            Console.ReadKey();
+                            RestartProgramPrompt();
                         }
                         commandInputNeeded = false;
                     }
@@ -119,10 +119,35 @@ namespace Hiq_test
             }
             catch(Exception e)
             {
+                Console.Clear();
                 Console.WriteLine(e.Message);
                 Console.WriteLine("Lets try again! \n");
-                Console.WriteLine("------------------------\n");
                 Main(new string[0]);
+            }
+        }
+
+        private static void RestartProgramPrompt()
+        {
+            Console.WriteLine("\nDo you want to run the program again? (y/n)");
+
+            var restartInputNeeded = true;
+
+            while (restartInputNeeded)
+            {
+                switch (Console.ReadKey().Key.ToString())
+                {
+                    case "Y":
+                        restartInputNeeded = false;
+                        Console.Clear();
+                        Main(new string[0]);
+                        break;
+                    case "N":
+                        restartInputNeeded = false;
+                        break;
+                    default:
+                        Console.WriteLine("\nDo you want to run the program again? (y/n)");
+                        break;
+                }
             }
         }
     }
